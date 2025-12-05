@@ -1,0 +1,10 @@
+insert into public.forum_members (memberid, name, registered) values (1, 'Harry', '2017-03-08');
+insert into public.forum_members (memberid, name, registered) values (2, 'Strangelove', '2017-04-12');
+insert into public.forum_members (memberid, name, registered) values (3, 'Lorelei', '2017-05-09');
+insert into public.forum_members (memberid, name, registered) values (4, 'Harry Lime', '2017-05-28');
+insert into public.forum_members (memberid, name, registered) values (5, 'Rick', '2017-07-07');
+insert into public.forum_members (memberid, name, registered) values (6, 'Darth Vader', '2017-07-13');
+insert into public.forum_members (memberid, name, registered) values (7, 'Jennifer', '2017-08-31');
+insert into public.forum_members (memberid, name, registered) values (8, 'Holly', '2018-01-07');
+insert into public.forum_members (memberid, name, registered) values (9, 'Vito', '2018-02-06');
+insert into public.forum_members (memberid, name, registered) values (10, 'Sally', '2018-02-21');

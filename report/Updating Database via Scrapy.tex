@@ -1,0 +1,631 @@
+\documentclass[12pt,UTF8]{ctexart}
+\usepackage[top=2cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry} % 页边距
+\usepackage{amsmath,amssymb}    % 数学公式
+\usepackage{graphicx}           % 图片插入
+\usepackage{booktabs}           % 专业表格
+\usepackage{multirow}            % 表格跨行
+\usepackage{listings}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usepackage{float}             % 图片位置
+\usepackage{appendix}
+\usepackage{multirow}   % 合并行
+\usepackage{hhline}     % 绘制自定义水平线
+\usepackage{array}      % 调整列格式
+\usepackage[colorlinks=true]{hyperref} % 超链接
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{mathpartir}
+\usepackage{amsthm}
+\usepackage{longtable}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\theoremstyle{plain}
+\newtheorem{theorem}{\indent Theorem}
+\newtheorem{lemma}[theorem]{\indent Lemma}
+\newtheorem{conjecture}[theorem]{\indent Conjecture}
+\newtheorem{note}[theorem]{\indent Notation}
+\newtheorem{proposition}[theorem]{\indent Proposition}
+\newtheorem{corollary}[theorem]{\indent Corollary}
+\newtheorem{definition}{\indent Definition}
+\newtheorem{example}{\indent Example}
+\newtheorem{remark}{\indent Remark}
+\newenvironment{solution}{\begin{proof}[\indent\bf Solution]}{\end{proof}}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit}
+\usetikzlibrary{automata, positioning, arrows}
+\usetikzlibrary{trees}
+\renewcommand{\proofname}{\indent\bf Proof}
+\lstset{
+ language=Python, % 设置语言
+ basicstyle=\ttfamily, % 设置字体族
+ breaklines=true, % 自动换行
+ keywordstyle=\bfseries\color{Aquamarine}, % 设置关键字为粗体，颜色为 NavyBlue
+ morekeywords={}, % 设置更多的关键字，用逗号分隔
+ emph={self}, % 指定强调词，如果有多个，用逗号隔开
+    emphstyle=\bfseries\color{Rhodamine}, % 强调词样式设置
+    commentstyle=\itshape\color{black!50!white}, % 设置注释样式，斜体，浅灰色
+    stringstyle=\bfseries\color{PineGreen!90!black}, % 设置字符串样式
+    columns=flexible,
+    numbers=left, % 显示行号在左边
+    numbersep=2em, % 设置行号的具体位置
+    numberstyle=\footnotesize, % 缩小行号
+    frame=single, % 边框
+    framesep=1em % 设置代码与边框的距离
+}
+\def\ctime{\bf{TIME}}
+\def\cspace{\bf{SPACE}}
+\def\ncone{\bf{NC^1}}
+\def\logsp{\bf{L}}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\card}[1]{\mathrm{Card}(#1)}
+\def\polyb{\bf{P}_{/poly}}
+\def\NP{\bf{NP}}
+\def\P{\bf{P}}
+\def\Pr{\mathrm{Pr}}
+
+\title{\bf{Updating Database via Scrapy}}
+\author{Yanqiao Chen(12412115), SUSTech, Shenzhen\\
+        Instructor: Dr. Shiqi Yu}
+
+\begin{document}
+\setlength{\arrayrulewidth}{0.4pt}
+\newcommand{\thickline}{\noalign{\hrule height 2pt}}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section{项目基本信息}
+
+\subsection{使用工具}
+
+\begin{table}[H] 
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+工具 & 版本 & 说明 \\
+\hline
+Python & 3.8.10 & 编程语言 \\
+\hline
+Scrapy & 2.5.1 & 爬虫框架 \\
+\hline
+PostgesSQL & 13.3 & 数据库管理系统 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{项目目标}
+通过爬虫爬取电影数据库tmdb电影和演员数据，更新旧有教学电影数据库中信息（自2019以后，根据查询可知电影数据库信息截至2019年）。限于API爬取速度限制，我只爬取了2019年以后的部分电影数据和其部分演员数据，如有需要更新之前的数据，只需要调整爬虫代码中的年份范围以及爬取限制即可，但是这可能需要更长的事件或者使用反爬机制，有可能有法律风险，因此此处并不尝试。
+
+限于API速率限制，以及为“教学用”（轻量化、小型化）数据库的考量，我们只爬取每个年份的部分电影数据（数量不等）。如果后续需要增量式更新，本爬虫亦可以通过修改peopleid起始以及年份范围来进行增量式更新。
+
+\subsection{更新内容}
+
+更新了三个表单：movies, credits, people, 并且向countries中插入了“??”作为数据库未知国家的占位符。同时注意到，现有数据库中的国家代码"sp"不符合ISO 3166-1标准，但是为了统一修改，将读取到的西班牙国家代码"es"全部替换为"sp"。同时，我们添加了巴勒斯坦"ps"作为国家代码。
+
+\section{项目过程} 
+
+整体项目过程如下：
+\begin{enumerate}
+    \item 向tmdb数据库申请api密钥
+    \item 编写Scrapy爬虫，爬取2019年以后的电影数据
+    \item 使用psycopg2导入数据库
+\end{enumerate}
+
+\subsection{申请API}
+
+在tmdb官网注册账号后，进入设置页面，申请API密钥。申请过程中需要填写一些基本信息以及使用目的等。申请成功后，可以在设置页面查看到API密钥。
+
+\subsection{编写爬虫}
+
+我们本次使用Scrapy框架编写爬虫。首先创建一个新的Scrapy项目，然后创建一个新的爬虫，命名为tmdb\_spider并存储在spiders文件夹下。然后，我们配置settings.py文件和pipeline.py文件，以便将爬取的数据存储到数据库中。最后，我们编写tmdb\_spider.py文件，定义爬虫的行为和数据处理逻辑。
+
+一个典型的爬虫框架如下：
+\begin{itemize}
+    \item start\_requests: 定义初始请求，通常是从某个URL开始爬取数据。
+    \item parse: 处理响应数据，提取所需信息，并生成新的请求。
+    \item item\_pipeline: 处理提取的数据，进行清洗、存储等操作。
+\end{itemize}
+
+根据主要的几个表格的关系，我们首先从电影本身的信息开始爬取，然后对于每个电影，爬取其演员和工作人员的信息。最后，将所有数据存储到数据库中。
+
+本次项目中，我进行了如下的操作：
+\begin{enumerate}
+    \item 发起请求，获取2019年以后的电影列表。
+    \item 将请求转换为JSON格式，便于数据处理。
+    \item 解析电影数据，提取电影ID、标题、简介、发布日期、评分等信息。
+    \item 对于每部电影，发起新的请求，获取其演员和工作人员信息。
+    \item 解析演员和工作人员数据，提取演员ID、姓名、角色等信息。
+    \item 将提取的数据存储到数据库中。同时，为了避免重复存入演员信息（保证唯一的peopleid），我们使用构造sql查询语句检查演员是否已经存在于数据库中。如果已经存在，那么credit表中应当使用已有的peopleid，否则插入新的演员信息并获取新的peopleid。
+\end{enumerate}
+
+在实际爬取过程中，因为一些设置上的问题，我们进行了多次不同年份的爬取。由于单个年份的电影数据较多，且电影网站往往将某一年份的电影持续推送，因此我们在以后的爬取中可能需要设置单个年份的爬取上限以满足各年份均匀分布的要求。否则，爬取到的电影数据可能会集中在某些年份，导致数据库更新不均衡；如果需要更新全部2019年以后的数据，则需要更长的时间和更复杂的反爬机制。
+
+\subsection{数据库更新结果}
+
+最后结果显示，我们成功更新了2019年电影4426条，涉及演员和导演近两万人，并且成功将数据存储到数据库中。数据库的完整性和一致性得到了保证，所有数据均符合预期格式和要求。对于那些国家信息缺失的电影，我们使用了“??”作为占位符，确保数据库的完整性。
+
+数据详见附录中的SQL文件。
+
+\section{课程资源的评估}
+
+\subsection{Some Comments on the Lecture Notes}
+\paragraph{Summary Slides}
+在阅读Lecture Notes的时候，我发现在大部分Slides中，内容比较分散且不够系统化。在重新阅读复习的过程中，需要花费很大的精力区分例子和关键定义与注意项目。建议在Lecture Notes中，根据Chapter中不同的概念，增加一页Summary进行重点内容的总结和归纳，以此方便在课堂中以及复习过程中方便阅读和理解。
+
+\paragraph{Slides中的显示错误}
+\begin{itemize}
+    \item Chapter 2 Slide 13, 14, 15: 文字标题显示重叠；
+    \item Chapter 2 Slide 23: 文字显示重叠；
+\end{itemize}
+
+\paragraph{笔误}
+\begin{itemize}
+    \item Chapter 2 Slide 38, 34: not null前面错误的添加了逗号，导致语法错误；
+\end{itemize}
+
+
+\subsection{Some Comments on the Original Filmdb}
+\paragraph{关于国家编号不符合ISO-3166-1的提示}
+在更新数据库的过程中，我发现现有filmdb数据库中的国家编号不符合ISO-3166-1标准。例如，西班牙的国家代码应为"es"，但在数据库中使用了"sp"。为了保持一致性，我在爬取数据时将西班牙的国家代码统一替换为"sp"。建议在数据库设计和维护过程中，严格遵守国际标准，以避免混淆和错误。由于filmdb中的数据库中原始数据来源不明，因此为了减小对于数据库现有数据的影响，在更新的过程中保持与数据库内部一致。但是建议在后续的数据库设计中，遵循国际标准。
+
+
+\section{一些课程建议}
+
+\subsection{关于Lecture}
+
+\subsection{关于Lab}
+
+\subsection{关于Project}
+
+\subsection{关于课外阅读}
+
+\section{总结}
+
+\appendix
+
+\section{Python Scrapy 爬虫代码}
+
+\begin{lstlisting}[language=Python, caption=tmdb\_spider.py 爬虫代码]
+import scrapy
+import re
+
+
+class TmdbSpider(scrapy.Spider):
+    name = "tmdb"
+    allowed_domains = ["api.themoviedb.org"]
+
+    API_KEY = "Your API Key"
+
+    def start_requests(self):
+        url = "https://api.themoviedb.org/3/discover/movie"
+        base_params = {
+            'api_key': self.API_KEY,
+            'sort_by': 'popularity.desc',
+            'page': 1,
+            'with_release_type': '2|3',
+        }
+        years = range(2020, 2021)  
+
+        for year in years:
+            year_params = base_params.copy()
+            year_params['primary_release_year'] = year
+
+            query_string = '&'.join([f"{k}={v}" for k, v in year_params.items()])
+            full_url = f"{url}?{query_string}"
+
+            self.logger.info(f"Starting crawl for year: {year}")
+            yield scrapy.Request(url=full_url, callback=self.parse_discover)
+
+    def parse_discover(self, response):
+        try:
+            data = response.json()
+        except Exception as e:
+            self.logger.error(f"Failed to parse JSON from Discover: {e}")
+            return
+
+        for movie in data.get('results', []):
+            movie_id = movie.get('id')
+            detail_url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={self.API_KEY}"
+            yield scrapy.Request(
+                url=detail_url,
+                callback=self.parse_details,
+                meta={'initial_data': movie}
+            )
+
+        current_page = data.get('page')
+        total_pages = data.get('total_pages')
+
+        if current_page is not None and current_page < total_pages:
+            if current_page >= 500:
+                self.logger.warning("Reached TMDB API limit (Page 500). Stopping pagination for this query.")
+            else:
+                next_page = current_page + 1
+                next_url = re.sub(r'page=\d+', f'page={next_page}', response.url)
+                self.logger.info(f"Paging: Requesting page {next_page} of {total_pages}")
+                yield scrapy.Request(url=next_url, callback=self.parse_discover)
+
+    def parse_details(self, response):
+        initial_data = response.meta['initial_data']
+        try:
+            detail_data = response.json()
+        except Exception as e:
+            self.logger.error(f"Failed to parse JSON from Details: {e}")
+            return
+
+        item_data = {
+            'movieid': detail_data.get('id'),
+            'title': initial_data.get('title'),
+            'release_date': initial_data.get('release_date'),
+            'runtime': detail_data.get('runtime', 0) or 0
+        }
+
+        countries = detail_data.get('production_countries', [])
+        if countries:
+            code = countries[0].get('iso_3166_1')
+            if code == 'ES' or code == 'es':
+                code = 'sp'
+            if code == 'KN' or code == 'kn':
+                code = 'ke'
+            item_data['country'] = code.lower() if code else '??'
+        else:
+            item_data['country'] = '??'
+
+        credits_url = f"https://api.themoviedb.org/3/movie/{item_data['movieid']}/credits?api_key={self.API_KEY}"
+        yield scrapy.Request(
+            url=credits_url,
+            callback=self.parse_credits,
+            meta={'item_data': item_data}
+        )
+
+    def parse_credits(self, response):
+        from ..items import TmdbMovieItem
+
+        item_data = response.meta['item_data']
+        try:
+            credits_data = response.json()
+        except Exception as e:
+            self.logger.error(f"Failed to parse JSON from Credits: {e}")
+            return
+
+        item = TmdbMovieItem(**item_data)
+        processed_people = []
+
+        for p in credits_data.get('cast', [])[:5]:
+            processed_people.append({
+                'tmdb_id': p.get('id'),
+                'name': p.get('name'),
+                'job': 'A',
+                'gender': None,
+                'born': None,
+                'died': None
+            })
+
+        for p in credits_data.get('crew', []):
+            if p.get('job') == 'Director':
+                processed_people.append({
+                    'tmdb_id': p.get('id'),
+                    'name': p.get('name'),
+                    'job': 'D',
+                    'gender': None,
+                    'born': None,
+                    'died': None
+                })
+
+        if processed_people:
+            item['cast_crew'] = processed_people
+
+            first_person = processed_people[0]
+            person_url = f"https://api.themoviedb.org/3/person/{first_person['tmdb_id']}?api_key={self.API_KEY}"
+
+            yield scrapy.Request(
+                url=person_url,
+                callback=self.parse_person_details,
+                meta={
+                    'item': item,
+                    'people_list': processed_people,
+                    'current_index': 0
+                }
+            )
+        else:
+            item['cast_crew'] = []
+            yield item
+
+    def parse_person_details(self, response):
+        meta = response.meta
+        try:
+            person_data = response.json()
+        except Exception as e:
+            self.logger.error(f"Failed to parse JSON from Person: {e}")
+            return
+
+        item = meta['item']
+        people_list = meta['people_list']
+        current_index = meta['current_index']
+
+        person = people_list[current_index]
+
+        gender_code = person_data.get('gender')
+        if gender_code == 1:
+            person['gender'] = 'F'
+        elif gender_code == 2:
+            person['gender'] = 'M'
+        else:
+            person['gender'] = '?'
+
+        birthday = person_data.get('birthday')
+        if birthday:
+            person['born'] = int(birthday[:4])
+        else:
+            person['born'] = 0 
+
+        deathday = person_data.get('deathday')
+        if deathday:
+            person['died'] = int(deathday[:4])
+        else:
+            person['died'] = None  
+
+        next_index = current_index + 1
+
+        if next_index < len(people_list):
+            next_person = people_list[next_index]
+            person_url = f"https://api.themoviedb.org/3/person/{next_person['tmdb_id']}?api_key={self.API_KEY}"
+
+            yield scrapy.Request(
+                url=person_url,
+                callback=self.parse_person_details,
+                meta={
+                    'item': item,
+                    'people_list': people_list,
+                    'current_index': next_index
+                }
+            )
+        else:
+            yield item
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption=pipeline.py 数据库存储代码]
+import psycopg2
+from scrapy.exceptions import DropItem
+from .items import TmdbMovieItem
+
+
+class PostgresPipeline:
+    START_PEOPLE_ID = 26319 # 此处根据数据库实际调整
+    people_cache = {}
+
+    current_people_id = START_PEOPLE_ID
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        # 从 settings.py 中加载数据库配置
+        db_settings = crawler.settings.getdict('DATABASE')
+        return cls(db_settings)
+
+    def __init__(self, db_settings):
+        self.db_settings = db_settings
+        self.conn = None
+        self.cursor = None
+
+    def open_spider(self, spider):
+        """爬虫开启时连接数据库"""
+        try:
+            self.conn = psycopg2.connect(
+                host=self.db_settings['host'],
+                port=self.db_settings['port'],
+                database=self.db_settings['database'],
+                user=self.db_settings['username'],
+                password=self.db_settings['password']
+            )
+            # 关闭自动提交，手动控制事务
+            self.conn.autocommit = False
+            self.cursor = self.conn.cursor()
+            spider.logger.info("Database connection established successfully.")
+
+            try:
+                self.cursor.execute(f"SELECT setval('people_peopleid_seq', {self.START_PEOPLE_ID - 1}, true);")
+                self.conn.commit()
+                spider.logger.info(f"peopleid sequence set to start at {self.START_PEOPLE_ID}.")
+            except psycopg2.Error as e:
+                self.conn.rollback()
+                spider.logger.warning(f"Could not set sequence (might not exist): {e}")
+
+        except psycopg2.Error as e:
+            spider.logger.error(f"Database connection failed: {e}")
+            raise
+
+    def close_spider(self, spider):
+        """爬虫关闭时关闭连接"""
+        if self.conn:
+            self.conn.close()
+            spider.logger.info("Database connection closed.")
+
+
+    def _execute_sql(self, sql, params=None):
+        """执行 SQL 语句，出错时抛出异常由 process_item 捕获"""
+        self.cursor.execute(sql, params)
+
+    def process_item(self, item, spider):
+        if not isinstance(item, TmdbMovieItem):
+            return item
+
+        try:
+            # 1. 插入或更新 Movies 表 (父表)
+            self._insert_movie(item)
+
+            # 2. 遍历演职员，处理 People 和 Credits
+            for person_data in item.get('cast_crew', []):
+                # 获取有效的人物 ID (查找现有或插入新人物)
+                people_id = self._insert_or_lookup_person(person_data)
+
+                # 3. 插入 Credits 表 (子表)
+                self._insert_credit(item['movieid'], people_id, person_data['job'])
+
+            # 4. 提交整个事务 (只有当所有步骤都成功时)
+            self.conn.commit()
+            # spider.logger.debug(f"Committed transaction for movie: {item['movieid']}")
+
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            spider.logger.error(
+                f"DB Error processing movie {item.get('movieid')}: {e.pgerror.strip() if e.pgerror else e}")
+
+        except Exception as e:
+            self.conn.rollback()
+            spider.logger.error(f"General Error processing movie {item.get('movieid')}: {e}")
+
+        return item
+
+    def _insert_movie(self, item):
+        """插入或更新 Movies 表"""
+
+        country_code = item['country']
+
+        sql = """
+              INSERT INTO movies (movieid, title, country, year_released, runtime)
+              VALUES (%s, %s, %s, %s, %s) ON CONFLICT (movieid) DO \
+              UPDATE \
+                  SET title = EXCLUDED.title, runtime = EXCLUDED.runtime; \
+              """
+        params = (
+            item['movieid'],
+            item['title'],
+            country_code,
+            int(item['release_date'][:4]) if item['release_date'] else 0,
+            item['runtime']
+        )
+        self._execute_sql(sql, params)
+
+    def _insert_or_lookup_person(self, person_data):
+        """
+        查找或插入人物，并返回 peopleid。
+        逻辑：
+        1. 检查本地缓存。
+        2. 检查数据库 (SELECT)。
+        3. 如果不存在，插入新记录 (INSERT)。
+        """
+        full_name = person_data.get('name')
+        parts = full_name.strip().split(' ', 1)
+        first_name = parts[0] if len(parts) > 1 else None
+        surname = parts[-1]
+        if len(parts) == 1:
+            first_name = None
+
+        people_key = (surname, first_name)
+
+        if people_key in self.people_cache:
+            return self.people_cache[people_key]
+
+        lookup_sql = """
+                     SELECT peopleid \
+                     FROM people
+                     WHERE surname = %s \
+                       AND first_name IS NOT DISTINCT \
+                     FROM %s; \
+                     """
+        self._execute_sql(lookup_sql, (surname, first_name))
+        result = self.cursor.fetchone()
+
+        if result:
+            people_id = result[0]
+            self.people_cache[people_key] = people_id
+            return people_id
+
+        assigned_id = self.current_people_id
+
+        born_year = person_data.get('born', 0)
+        died_year = person_data.get('died')  
+        gender_char = person_data.get('gender', '?')
+
+        insert_sql = """
+                     INSERT INTO people (peopleid, first_name, surname, born, died, gender)
+                     VALUES (%s, %s, %s, %s, %s, %s); \
+                     """
+        params = (
+            assigned_id,
+            first_name,
+            surname,
+            born_year,
+            died_year,
+            gender_char
+        )
+        self._execute_sql(insert_sql, params)
+
+        self.current_people_id += 1
+        self.people_cache[people_key] = assigned_id
+
+        return assigned_id
+
+    def _insert_credit(self, movieid, peopleid, credited_as):
+        sql = """
+              INSERT INTO credits (movieid, peopleid, credited_as)
+              VALUES (%s, %s, %s) ON CONFLICT DO NOTHING; \
+              """
+        params = (movieid, peopleid, credited_as)
+        self._execute_sql(sql, params)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption=items.py Item 定义代码]
+import scrapy
+
+
+class TmdbMovieItem(scrapy.Item):
+    # Movies 表字段
+    movieid = scrapy.Field()
+    title = scrapy.Field()
+    release_date = scrapy.Field()
+    country = scrapy.Field()
+    runtime = scrapy.Field()
+
+    cast_crew = scrapy.Field()
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption=settings.py 数据库配置代码]
+
+BOT_NAME = 'tmdb_scraper' 
+
+SPIDER_MODULES = ['project2.spiders']
+NEWSPIDER_MODULE = 'project2.spiders'
+
+USER_AGENT = 'tmdb_scraper'
+
+ROBOTSTXT_OBEY = True
+
+
+CONCURRENT_REQUESTS = 4 
+(4 * 0.25 = 1秒)
+DOWNLOAD_DELAY = 0.25
+
+AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_START_DELAY = 5.0     
+AUTOTHROTTLE_MAX_DELAY = 60.0    
+AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0 
+
+DATABASE = {
+    'drivername': 'postgresql',
+    'host': 'localhost',        
+    'port': '5432',
+    'database': 'project2', 
+    'username': 'postgres', 
+    'password': '1234'  
+}
+
+ITEM_PIPELINES = {
+    'project2.pipelines.PostgresPipeline': 300,
+}
+
+LOG_LEVEL = 'INFO'
+
+RETRY_TIMES = 3
+
+COOKIES_ENABLED = False
+\end{lstlisting}
+
+\section{更新后的数据库导出的SQL文件}
+
+
+\end{document}
