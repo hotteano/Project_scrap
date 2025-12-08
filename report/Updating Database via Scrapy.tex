@@ -161,7 +161,7 @@ PostgesSQL & 13.3 & 数据库管理系统 \\
 \begin{itemize}
     \item Chapter 2 Slide 13, 14, 15, 29, 61: 文字标题显示重叠；
     \item Chapter 2 Slide 23: 文字显示重叠；
-    \item Chapter 2 Slide
+    \item Chapter 9 Slide 1, 标题Trigger少打了一个g；
 \end{itemize}
 
 \paragraph{笔误}
@@ -173,6 +173,14 @@ PostgesSQL & 13.3 & 数据库管理系统 \\
 \begin{itemize} 
     \item Chapter 2 Slide 20: 实际上，许多的SQL方言可以开启严格模式，从而阻止一些可能不符合逻辑或者可能导致错误的插入，例如MySQL的STRICT\_ALL\_TABLES模式；不过，数据库在严格模式下仍然不会符合关系模型中的所有约束；
     \item Chapter 2 Slide 36: 长段注释语法“/* */”可以补充说明；
+    \item Chapter 3 Slide 30, 第三行在部分数据库的日期转换中可能返回null，移植性较差；
+    \item Chapter 4 Slide 19，可以在PPT中明确附加where和having的执行顺序（where对原始行过滤，having对group by后的各组进行过滤）；
+    \item Chapter 4 Slide 27, 可以在PPT中附加count(*)和count(col)对比：count(*)不会检查数据中是否保存了null，count(col)会检查数据行对应的列中是否包含null；
+    \item Chapter 5 Slide 61, 可以在PPT上强调关联子查询和普通子查询效率上存在区别的原因，例如给出一个具体的SQL查询例子；
+    \item Chapter 5 Slide 75，可以增加对于此类运算和解释：由于逻辑短路，对于and运算，如果第一个是False，呢么就是False；如果第一个是True，还需要检验第二个；
+    \item Chapter 7 Slide 8，介绍全文搜索的时候，可以介绍其优势，例如，全文搜索可以利用倒排索引提高搜索效率，因此其比like的搜索效率更高；
+    \item Chapter 7，可以增加对于MVCC的介绍；
+    \item Chapter 7 Slide 81, 可以增加对于with语法中，指定分隔符等额外选项的语法；
 \end{itemize}
 
 
