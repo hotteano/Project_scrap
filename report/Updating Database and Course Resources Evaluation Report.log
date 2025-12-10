@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.17)  10 DEC 2025 17:34
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.17)  10 DEC 2025 17:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -948,8 +948,7 @@ File: pgflibraryarrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 File: tikzlibrarytrees.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
-No file "Updating Database and Course Resources Evaluation Report".aux.
+) (./Updating Database and Course Resources Evaluation Report.aux)
 \openout1 = `"Updating Database and Course Resources Evaluation Report.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 74.
@@ -1029,6 +1028,7 @@ LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 74.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 74.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -1065,34 +1065,31 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 
 \c@lstlisting=\count393
 Package hyperref Info: Link coloring ON on input line 74.
+(./Updating Database and Course Resources Evaluation Report.out) (./Updating Database and Course Resources Evaluation Report.out)
 \@outlinefile=\write4
 \openout4 = `"Updating Database and Course Resources Evaluation Report.out"'.
 
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
 LaTeX Font Info:    Trying to load font information for U+msa on input line 79.
-(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+ (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 79.
  (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-No file "Updating Database and Course Resources Evaluation Report".toc.
+) (./Updating Database and Course Resources Evaluation Report.toc
+
+[1
+
+])
 \tf@toc=\write5
 \openout5 = `"Updating Database and Course Resources Evaluation Report.toc"'.
 
 
 
-[1
-
-]
+[2]
 
 LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <12> not available
 (Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 124.
-[2]
-
 [3]
 
 [4]
@@ -1104,6 +1101,8 @@ LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <12> not available
 [7]
 
 [8]
+
+[9]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 282.
 
 Package fontspec Info: 
@@ -1135,8 +1134,6 @@ LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 283.
 
 
-[9]
-
 [10]
 
 [11]
@@ -1147,19 +1144,19 @@ LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
 
 [14]
 
+[15]
+
 LaTeX Font Warning: Font shape `TU/FangSong(0)/m/it' undefined
 (Font)              using `TU/FangSong(0)/m/n' instead on input line 487.
 
 
 
-[15]
+[16]
 
 LaTeX Font Warning: Font shape `TU/FangSong(0)/b/n' undefined
 (Font)              using `TU/FangSong(0)/m/n' instead on input line 504.
 
 
-
-[16]
 
 [17]
 
@@ -1171,7 +1168,9 @@ LaTeX Font Warning: Font shape `TU/FangSong(0)/b/n' undefined
 
 [21]
 
-[22] (./Updating Database and Course Resources Evaluation Report.aux)
+[22]
+
+[23] (./Updating Database and Course Resources Evaluation Report.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2022/08/05>
@@ -1184,12 +1183,12 @@ Package rerunfilecheck Info: File `"Updating Database and Course Resources Evalu
 (rerunfilecheck)             Checksum: <no file>.
  ) 
 Here is how much of TeX's memory you used:
- 31550 strings out of 469606
- 676310 string characters out of 5465410
+ 31566 strings out of 469606
+ 677063 string characters out of 5465410
  1504224 words of memory out of 5000000
- 59473 multiletter control sequences out of 15000+600000
+ 59481 multiletter control sequences out of 15000+600000
  637416 words of font info for 108 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
  93i,8n,111p,591b,1949s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Updating Database and Course Resources Evaluation Report.pdf (22 pages).
+Output written on Updating Database and Course Resources Evaluation Report.pdf (23 pages).
