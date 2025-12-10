@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.17)  10 DEC 2025 12:10
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.17)  10 DEC 2025 17:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -777,7 +777,6 @@ Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
  (c:/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
 )
-Package hyperref Info: Option `draft' set `true' on input line 4066.
 Package hyperref Info: Option `unicode' set `true' on input line 4066.
 Package hyperref Info: Option `colorlinks' set `true' on input line 4066.
 Package hyperref Info: Hyper figures OFF on input line 4195.
@@ -1065,20 +1064,21 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \c@lstlisting=\count393
-
-Package hyperref Warning: Draft mode on.
-
 Package hyperref Info: Link coloring ON on input line 73.
+(./Updating Database via Scrapy.out) (./Updating Database via Scrapy.out)
+\@outlinefile=\write4
+\openout4 = `"Updating Database via Scrapy.out"'.
+
 LaTeX Font Info:    Trying to load font information for U+msa on input line 78.
-(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+ (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 78.
  (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (./Updating Database via Scrapy.toc)
-\tf@toc=\write4
-\openout4 = `"Updating Database via Scrapy.toc"'.
+\tf@toc=\write5
+\openout5 = `"Updating Database via Scrapy.toc"'.
 
 
 
@@ -1099,7 +1099,9 @@ LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <12> not available
 [6]
 
 [7]
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 267.
+
+[8]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 281.
 
 Package fontspec Info: 
 (fontspec)             Could not resolve font "FangSong/BI" (it probably
@@ -1126,23 +1128,65 @@ Package fontspec Info:
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <->"FangSong/OT:script=hani;language=dflt;"
 
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 282.
 
 
-[8]
+[9]
 
-[9] (./Updating Database via Scrapy.aux)
+[10]
+
+[11]
+
+[12]
+
+[13]
+
+[14]
+
+LaTeX Font Warning: Font shape `TU/FangSong(0)/m/it' undefined
+(Font)              using `TU/FangSong(0)/m/n' instead on input line 486.
+
+
+
+[15]
+
+LaTeX Font Warning: Font shape `TU/FangSong(0)/b/n' undefined
+(Font)              using `TU/FangSong(0)/m/n' instead on input line 503.
+
+
+
+[16]
+
+[17]
+
+[18]
+
+[19]
+
+[20]
+
+[21]
+
+[22] (./Updating Database via Scrapy.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2022/08/05>
  ***********
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+Package rerunfilecheck Info: File `"Updating Database via Scrapy".out' has not changed.
+(rerunfilecheck)             Checksum: <no file>.
  ) 
 Here is how much of TeX's memory you used:
- 31151 strings out of 469606
- 668509 string characters out of 5465410
- 1277219 words of memory out of 5000000
- 59077 multiletter control sequences out of 15000+600000
- 637223 words of font info for 104 fonts, out of 8000000 for 9000
+ 31566 strings out of 469606
+ 676307 string characters out of 5465410
+ 1504168 words of memory out of 5000000
+ 59481 multiletter control sequences out of 15000+600000
+ 637416 words of font info for 108 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 93i,8n,111p,563b,1093s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 93i,8n,111p,563b,1949s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Updating Database via Scrapy.pdf (9 pages).
+Output written on Updating Database via Scrapy.pdf (22 pages).
