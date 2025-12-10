@@ -13,14 +13,15 @@
 \contentsline {paragraph}{Slides中的显示错误}{4}{paragraph*.3}%
 \contentsline {paragraph}{笔误}{4}{paragraph*.4}%
 \contentsline {paragraph}{一些补充更新}{4}{paragraph*.5}%
-\contentsline {paragraph}{关于Lecture Slide的行文建议}{5}{paragraph*.6}%
-\contentsline {subsection}{\numberline {3.2}Some Comments on the Original Filmdb}{5}{subsection.3.2}%
-\contentsline {paragraph}{关于国家编号不符合ISO-3166-1的提示}{5}{paragraph*.7}%
-\contentsline {paragraph}{对于数据库中其它表的疑问}{5}{paragraph*.8}%
+\contentsline {paragraph}{关于Opengauss的增补}{5}{paragraph*.6}%
+\contentsline {paragraph}{关于Lecture Slide的行文建议}{6}{paragraph*.7}%
+\contentsline {subsection}{\numberline {3.2}Some Comments on the Original Filmdb}{6}{subsection.3.2}%
+\contentsline {paragraph}{关于国家编号不符合ISO-3166-1的提示}{6}{paragraph*.8}%
+\contentsline {paragraph}{对于数据库中其它表的疑问}{6}{paragraph*.9}%
 \contentsline {section}{\numberline {4}一些课程建议}{6}{section.4}%
 \contentsline {subsection}{\numberline {4.1}关于Lecture}{6}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}关于Lab}{7}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}关于Project}{7}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.3}关于Project}{8}{subsection.4.3}%
 \contentsline {section}{\numberline {5}总结}{8}{section.5}%
 \contentsline {section}{\numberline {A}Python Scrapy 爬虫代码}{8}{appendix.A}%
-\contentsline {section}{\numberline {B}更新后的数据库导出的SQL文件}{8}{appendix.B}%
+\contentsline {section}{\numberline {B}更新后的数据库导出的SQL文件}{9}{appendix.B}%

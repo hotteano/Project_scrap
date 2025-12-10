@@ -185,6 +185,19 @@ PostgesSQL & 13.3 & 数据库管理系统 \\
 
 \paragraph{关于Opengauss的增补}
 
+\begin{itemize}
+\item OpenGauss增加了一些特性，例如支持AI4DB，也就是通过机器学习算法辅助开发人员进行数据库运维监控。这一功能主要通过华为开发的数据库运维平台DBMind进行。项目开源在Gitcode上。
+\item GaussMaster则支持基于opengauss数据库本身，构建用户的知识库，支持用户直接通过自然语言询问数据库相关问题，并且通过大模型进行回答。
+\item OpenGauss支持使用CREATE MODEL等DB4AI语法，支持在数据库内训练模型，并且集成了部分经典AI算法，例如线性回归、逻辑回归等。
+\item OpenGauss支持SQL预处理，通过预处理客户在其它数据库中编写的SQL转化为OpenGauss支持的SQL，方便客户转移业务数据库。
+\item OpenGauss内置了stack工具，支持运维人员直接调用指定线程的调用栈，分析死锁等问题。
+\item OpenGauss具有特有的DB4AI Schema，
+\end{itemize}
+
+如上等等，我们发现，OpenGauss的开发有两个特点：一是兼容性，支持开发人员将原有的数据库业务转移到OpenGauss上面；二是智能化，支持AI4DB和DB4AI等功能，迎合当前AI发展的潮流。这实际上是OpenGauss的一种策略。一方面，OpenGauss处于初步发展阶段，当前已有很多开源数据库，例如PostgreSQL、MySQL等，OpenGauss需要通过兼容性来吸引用户使用；另一方面，AI技术的发展为数据库系统带来了新的机遇，OpenGauss通过集成AI功能，提升数据库的智能化水平，从而增强其竞争力。
+
+
+
 \paragraph{关于Lecture Slide的行文建议}
 
 在原始的Lecture Slide中，许多内容的行文比较零散且不够系统化。尤其是对于一些重点的细节进行介绍的时候，重点内容缺乏加粗和强调；对于一些特性进行介绍的时候，学生
